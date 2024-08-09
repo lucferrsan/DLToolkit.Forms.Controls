@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-using Xamarin.Forms;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 namespace DLToolkit.Forms.Controls
 {
     [Helpers.FlowListView.Preserve(AllMembers = true)]
     public class FlowDataTemplateSelector : DataTemplateSelector
     {
-        readonly WeakReference<FlowListView> _flowListViewRef;
+        readonly WeakReference<MauiFlowListView> _flowListViewRef;
 
         private readonly DataTemplate _defaultTemplate;
 
-        public FlowDataTemplateSelector(WeakReference<FlowListView> flowListViewRef)
+        public FlowDataTemplateSelector(WeakReference<MauiFlowListView> flowListViewRef)
         {
             _flowListViewRef = flowListViewRef;
             _defaultTemplate = new DataTemplate(() => new FlowListViewInternalCell(flowListViewRef));
@@ -22,14 +23,14 @@ namespace DLToolkit.Forms.Controls
         {
             if (item is IFlowLoadingModel)
             {
-                if (_flowListViewRef.TryGetTarget(out FlowListView flowListView))
+                if (_flowListViewRef.TryGetTarget(out MauiFlowListView flowListView))
                 {
                     return flowListView.FlowLoadingTemplate;
                 }
             }
             else if (item is IFlowEmptyModel)
             {
-                if (_flowListViewRef.TryGetTarget(out FlowListView flowListView))
+                if (_flowListViewRef.TryGetTarget(out MauiFlowListView flowListView))
                 {
                     return flowListView.FlowEmptyTemplate;
                 }

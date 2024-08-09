@@ -7,16 +7,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Input;
-using Xamarin.Forms;
 using System.Threading.Tasks;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
 
 namespace DLToolkit.Forms.Controls
 {
     /// <summary>
-    /// FlowListView.
+    /// MauiFlowListView.
     /// </summary>
     [Helpers.FlowListView.Preserve(AllMembers = true)]
-    public class FlowListView : ListView
+    public class MauiFlowListView : ListView
     {
         /// <summary>
         /// Used to avoid linking issues
@@ -25,25 +27,25 @@ namespace DLToolkit.Forms.Controls
         public static void Init()
         {
 #pragma warning disable 0219
-            var dummy1 = typeof(FlowListView);
+            var dummy1 = typeof(MauiFlowListView);
             var dummy2 = typeof(FlowListViewInternalCell);
             var dummy3 = typeof(FlowDataTemplateSelector);
 #pragma warning restore 0219
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DLToolkit.Forms.Controls.FlowListView"/> class.
+        /// Initializes a new instance of the <see cref="DLToolkit.Forms.Controls.MauiFlowListView"/> class.
         /// </summary>
-        public FlowListView() : base(ListViewCachingStrategy.RecycleElement)
+        public MauiFlowListView() : base(ListViewCachingStrategy.RecycleElement)
         {
             InitialSetup();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:DLToolkit.Forms.Controls.FlowListView"/> class.
+        /// Initializes a new instance of the <see cref="T:DLToolkit.Forms.Controls.MauiFlowListView"/> class.
         /// </summary>
         /// <param name="cachingStrategy">Caching strategy.</param>
-        public FlowListView(ListViewCachingStrategy cachingStrategy) : base(cachingStrategy)
+        public MauiFlowListView(ListViewCachingStrategy cachingStrategy) : base(cachingStrategy)
         {
             InitialSetup();
         }
@@ -52,38 +54,38 @@ namespace DLToolkit.Forms.Controls
         {
             RefreshDesiredColumnCount();
             SizeChanged += FlowListSizeChanged;
-            PropertyChanged += FlowListViewPropertyChanged;
-            PropertyChanging += FlowListViewPropertyChanging;
+            PropertyChanged += MauiFlowListViewPropertyChanged;
+            PropertyChanging += MauiFlowListViewPropertyChanging;
 
             FlowColumnExpand = FlowColumnExpand.None;
             FlowColumnCount = default(int?);
             FlowColumnMinWidth = 50d;
-            FlowRowBackgroundColor = Color.Transparent;
-            FlowTappedBackgroundColor = Color.Transparent;
+            FlowRowBackgroundColor = Colors.Transparent;
+            FlowTappedBackgroundColor = Colors.Transparent;
             FlowTappedBackgroundDelay = 0;
 
-            var flowListViewRef = new WeakReference<FlowListView>(this);
-            ItemTemplate = new FlowDataTemplateSelector(flowListViewRef);
+            var MauiFlowListViewRef = new WeakReference<MauiFlowListView>(this);
+            ItemTemplate = new FlowDataTemplateSelector(MauiFlowListViewRef);
             SeparatorVisibility = SeparatorVisibility.None;
-            SeparatorColor = Color.Transparent;
+            SeparatorColor = Colors.Transparent;
             GroupDisplayBinding = new Binding(nameof(FlowGroup.Key));
 
-            ItemSelected += FlowListViewItemSelected;
-            ItemAppearing += FlowListViewItemAppearing;
-            ItemDisappearing += FlowListViewItemDisappearing;
+            ItemSelected += MauiFlowListViewItemSelected;
+            ItemAppearing += MauiFlowListViewItemAppearing;
+            ItemDisappearing += MauiFlowListViewItemDisappearing;
         }
 
         /// <summary>
         /// The flow group grouping key selector property.
         /// </summary>
-        public static BindableProperty FlowColumnExpandProperty = BindableProperty.Create(nameof(FlowColumnExpand), typeof(FlowColumnExpand), typeof(FlowListView), FlowColumnExpand.None);
+        public static BindableProperty FlowColumnExpandProperty = BindableProperty.Create(nameof(FlowColumnExpand), typeof(FlowColumnExpand), typeof(MauiFlowListView), FlowColumnExpand.None);
 
         /// <summary>
-        /// Gets or sets FlowListView column expand mode.
+        /// Gets or sets MauiFlowListView column expand mode.
         /// It defines how columns should expand when 
         /// row current column count is less than defined columns templates count
         /// </summary>
-        /// <value>FlowListView column expand mode.</value>
+        /// <value>MauiFlowListView column expand mode.</value>
         public FlowColumnExpand FlowColumnExpand
         {
             get { return (FlowColumnExpand)GetValue(FlowColumnExpandProperty); }
@@ -199,9 +201,9 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// The flow column count property.
         /// </summary>
-        public static BindableProperty FlowColumnCountProperty = BindableProperty.Create(nameof(FlowColumnCount), typeof(int?), typeof(FlowListView), default(int?), propertyChanged: (bindable, oldValue, newValue) =>
+        public static BindableProperty FlowColumnCountProperty = BindableProperty.Create(nameof(FlowColumnCount), typeof(int?), typeof(MauiFlowListView), default(int?), propertyChanged: (bindable, oldValue, newValue) =>
         {
-            var list = (FlowListView)bindable;
+            var list = (MauiFlowListView)bindable;
             if (list.FlowItemsSource == null)
                 return;
 
@@ -210,7 +212,7 @@ namespace DLToolkit.Forms.Controls
         });
 
         /// <summary>
-        /// Enables or disables FlowListView auto/manual column count.
+        /// Enables or disables MauiFlowListView auto/manual column count.
         /// Auto Column count is calculated basing on View width 
         /// and <c>FlowColumnMinWidth</c> property
         /// </summary>
@@ -224,7 +226,7 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// The flow desired column count property key.
         /// </summary>
-        public static readonly BindablePropertyKey FlowDesiredColumnCountPropertyKey = BindableProperty.CreateReadOnly(nameof(FlowDesiredColumnCount), typeof(int), typeof(FlowListView), 1, BindingMode.OneWayToSource);
+        public static readonly BindablePropertyKey FlowDesiredColumnCountPropertyKey = BindableProperty.CreateReadOnly(nameof(FlowDesiredColumnCount), typeof(int), typeof(MauiFlowListView), 1, BindingMode.OneWayToSource);
         /// <summary>
         /// The flow column count property.
         /// </summary>
@@ -243,10 +245,10 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// The flow column default minimum width property.
         /// </summary>
-        public static BindableProperty FlowColumnMinWidthProperty = BindableProperty.Create(nameof(FlowColumnMinWidth), typeof(double), typeof(FlowListView), 50d);
+        public static BindableProperty FlowColumnMinWidthProperty = BindableProperty.Create(nameof(FlowColumnMinWidth), typeof(double), typeof(MauiFlowListView), 50d);
 
         /// <summary>
-        /// Gets or sets the minimum column width of FlowListView.
+        /// Gets or sets the minimum column width of MauiFlowListView.
         /// Currently used only with <c>FlowAutoColumnCount</c> option
         /// </summary>
         /// <value>The minimum column width.</value>
@@ -259,7 +261,7 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// The flow row background color property.
         /// </summary>
-        public static BindableProperty FlowRowBackgroundColorProperty = BindableProperty.Create(nameof(FlowRowBackgroundColor), typeof(Color), typeof(FlowListView), Color.Transparent);
+        public static BindableProperty FlowRowBackgroundColorProperty = BindableProperty.Create(nameof(FlowRowBackgroundColor), typeof(Color), typeof(MauiFlowListView), Colors.Transparent);
 
         /// <summary>
         /// Gets or sets the color of the flow default row background.
@@ -273,7 +275,7 @@ namespace DLToolkit.Forms.Controls
         }
 
         /// <summary>
-        /// Occurs when FlowListView item is tapped.
+        /// Occurs when MauiFlowListView item is tapped.
         /// </summary>
         public event EventHandler<ItemTappedEventArgs> FlowItemTapped;
 
@@ -290,10 +292,10 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// FlowTappedBackgroundColor property.
         /// </summary>
-        public static BindableProperty FlowTappedBackgroundColorProperty = BindableProperty.Create(nameof(FlowTappedBackgroundColor), typeof(Color), typeof(FlowListView), Color.Transparent);
+        public static BindableProperty FlowTappedBackgroundColorProperty = BindableProperty.Create(nameof(FlowTappedBackgroundColor), typeof(Color), typeof(MauiFlowListView), Colors.Transparent);
 
         /// <summary>
-        /// Forces FlowListView to use AbsoluteLayout internally
+        /// Forces MauiFlowListView to use AbsoluteLayout internally
         /// When Enabled, auto row height can't be measured automatically,
         /// but it can improve performance
         /// </summary>
@@ -313,7 +315,7 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// FlowTappedBackgroundDelay property.
         /// </summary>
-        public static BindableProperty FlowTappedBackgroundDelayProperty = BindableProperty.Create(nameof(FlowTappedBackgroundDelay), typeof(int), typeof(FlowListView), 0);
+        public static BindableProperty FlowTappedBackgroundDelayProperty = BindableProperty.Create(nameof(FlowTappedBackgroundDelay), typeof(int), typeof(MauiFlowListView), 0);
 
         /// <summary>
         /// Gets or sets the background color delay of the cell when tapped (miliseconds).
@@ -328,12 +330,12 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// FlowLastTappedItemProperty.
         /// </summary>
-        public static BindableProperty FlowLastTappedItemProperty = BindableProperty.Create(nameof(FlowLastTappedItem), typeof(object), typeof(FlowListView), default(object), BindingMode.OneWayToSource);
+        public static BindableProperty FlowLastTappedItemProperty = BindableProperty.Create(nameof(FlowLastTappedItem), typeof(object), typeof(MauiFlowListView), default(object), BindingMode.OneWayToSource);
 
         /// <summary>
-        /// Gets FlowListView last tapped item.
+        /// Gets MauiFlowListView last tapped item.
         /// </summary>
-        /// <value>FlowListView last tapped item.</value>
+        /// <value>MauiFlowListView last tapped item.</value>
         public object FlowLastTappedItem
         {
             get { return GetValue(FlowLastTappedItemProperty); }
@@ -343,12 +345,12 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// FlowItemTappedCommandProperty.
         /// </summary>
-        public static BindableProperty FlowItemTappedCommandProperty = BindableProperty.Create(nameof(FlowItemTappedCommand), typeof(ICommand), typeof(FlowListView), null);
+        public static BindableProperty FlowItemTappedCommandProperty = BindableProperty.Create(nameof(FlowItemTappedCommand), typeof(ICommand), typeof(MauiFlowListView), null);
 
         /// <summary>
-        /// Gets or sets FlowListView item tapped command.
+        /// Gets or sets MauiFlowListView item tapped command.
         /// </summary>
-        /// <value>FlowListView item tapped command.</value>
+        /// <value>MauiFlowListView item tapped command.</value>
         public ICommand FlowItemTappedCommand
         {
             get { return (ICommand)GetValue(FlowItemTappedCommandProperty); }
@@ -358,12 +360,12 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// FlowItemAppearingCommandProperty.
         /// </summary>
-        public static BindableProperty FlowItemAppearingCommandProperty = BindableProperty.Create(nameof(FlowItemAppearingCommand), typeof(ICommand), typeof(FlowListView), null);
+        public static BindableProperty FlowItemAppearingCommandProperty = BindableProperty.Create(nameof(FlowItemAppearingCommand), typeof(ICommand), typeof(MauiFlowListView), null);
 
         /// <summary>
-        /// Gets or sets FlowListView item tapped command.
+        /// Gets or sets MauiFlowListView item tapped command.
         /// </summary>
-        /// <value>FlowListView item tapped command.</value>
+        /// <value>MauiFlowListView item tapped command.</value>
         public ICommand FlowItemAppearingCommand
         {
             get { return (ICommand)GetValue(FlowItemAppearingCommandProperty); }
@@ -373,12 +375,12 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// FlowItemDisappearingCommandProperty.
         /// </summary>
-        public static BindableProperty FlowItemDisappearingCommandProperty = BindableProperty.Create(nameof(FlowItemDisappearingCommand), typeof(ICommand), typeof(FlowListView), null);
+        public static BindableProperty FlowItemDisappearingCommandProperty = BindableProperty.Create(nameof(FlowItemDisappearingCommand), typeof(ICommand), typeof(MauiFlowListView), null);
 
         /// <summary>
-        /// Gets or sets FlowListView item tapped command.
+        /// Gets or sets MauiFlowListView item tapped command.
         /// </summary>
-        /// <value>FlowListView item tapped command.</value>
+        /// <value>MauiFlowListView item tapped command.</value>
         public ICommand FlowItemDisappearingCommand
         {
             get { return (ICommand)GetValue(FlowItemDisappearingCommandProperty); }
@@ -388,12 +390,12 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// FlowItemsSourceProperty.
         /// </summary>
-        public static BindableProperty FlowItemsSourceProperty = BindableProperty.Create(nameof(FlowItemsSource), typeof(ICollection), typeof(FlowListView), default(ICollection));
+        public static BindableProperty FlowItemsSourceProperty = BindableProperty.Create(nameof(FlowItemsSource), typeof(ICollection), typeof(MauiFlowListView), default(ICollection));
 
         /// <summary>
-        /// Gets FlowListView items source.
+        /// Gets MauiFlowListView items source.
         /// </summary>
-        /// <value>FlowListView items source.</value>
+        /// <value>MauiFlowListView items source.</value>
         public ICollection FlowItemsSource
         {
             get { return (IList)GetValue(FlowItemsSourceProperty); }
@@ -403,15 +405,15 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// FlowColumnsTemplatesProperty.
         /// </summary>
-        public static readonly BindableProperty FlowColumnTemplateProperty = BindableProperty.Create(nameof(FlowColumnTemplate), typeof(DataTemplate), typeof(FlowListView), default(DataTemplate));
+        public static readonly BindableProperty FlowColumnTemplateProperty = BindableProperty.Create(nameof(FlowColumnTemplate), typeof(DataTemplate), typeof(MauiFlowListView), default(DataTemplate));
 
         /// <summary>
-        /// Gets or sets FlowListView columns templates.
+        /// Gets or sets MauiFlowListView columns templates.
         /// Use instance of <c>FlowColumnSimpleTemplateSelector</c> for simple single view scenarios
         /// or implement your own FlowColumnTemplateSelector which can return cell type 
         /// basing on current cell BindingContext
         /// </summary>
-        /// <value>FlowListView columns templates.</value>
+        /// <value>MauiFlowListView columns templates.</value>
         public DataTemplate FlowColumnTemplate
         {
             get
@@ -427,7 +429,7 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// The is loading infinite is enabled property.
         /// </summary>
-        public static BindableProperty FlowIsLoadingInfiniteEnabledProperty = BindableProperty.Create(nameof(FlowIsLoadingInfiniteEnabled), typeof(bool), typeof(FlowListView), false);
+        public static BindableProperty FlowIsLoadingInfiniteEnabledProperty = BindableProperty.Create(nameof(FlowIsLoadingInfiniteEnabled), typeof(bool), typeof(MauiFlowListView), false);
 
         /// <summary>
         /// Gets or sets FlowIsLoadingInfiniteEnabled loading is enabled.
@@ -442,7 +444,7 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// The is loading infinite is running property.
         /// </summary>
-        public static BindableProperty FlowIsLoadingInfiniteProperty = BindableProperty.Create(nameof(FlowIsLoadingInfinite), typeof(bool), typeof(FlowListView), false, BindingMode.TwoWay);
+        public static BindableProperty FlowIsLoadingInfiniteProperty = BindableProperty.Create(nameof(FlowIsLoadingInfinite), typeof(bool), typeof(MauiFlowListView), false, BindingMode.TwoWay);
 
         /// <summary>
         /// Gets or sets FlowIsLoadingInfinite loading is running.
@@ -457,7 +459,7 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// The total of records to loading infinite property.
         /// </summary>
-        public static BindableProperty FlowTotalRecordsProperty = BindableProperty.Create(nameof(FlowTotalRecords), typeof(int), typeof(FlowListView), 0);
+        public static BindableProperty FlowTotalRecordsProperty = BindableProperty.Create(nameof(FlowTotalRecords), typeof(int), typeof(MauiFlowListView), 0);
 
         /// <summary>
         /// Gets or sets FlowTotalRecords total records to loading infinite.
@@ -474,7 +476,7 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// FlowLoadingTemplateProperty.
         /// </summary>
-        public static readonly BindableProperty FlowLoadingTemplateProperty = BindableProperty.Create(nameof(FlowLoadingTemplate), typeof(DataTemplate), typeof(FlowListView), default(DataTemplate));
+        public static readonly BindableProperty FlowLoadingTemplateProperty = BindableProperty.Create(nameof(FlowLoadingTemplate), typeof(DataTemplate), typeof(MauiFlowListView), default(DataTemplate));
 
         /// <summary>
         /// Gets or sets FlowLoadingTemplate loading template (ViewCell type).
@@ -489,7 +491,7 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// FlowLoadingCommandProperty.
         /// </summary>
-        public static BindableProperty FlowLoadingCommandProperty = BindableProperty.Create(nameof(FlowLoadingCommand), typeof(ICommand), typeof(FlowListView), null);
+        public static BindableProperty FlowLoadingCommandProperty = BindableProperty.Create(nameof(FlowLoadingCommand), typeof(ICommand), typeof(MauiFlowListView), null);
 
         /// <summary>
         /// Gets or sets FlowLoadingCommand loading execute command.
@@ -504,7 +506,7 @@ namespace DLToolkit.Forms.Controls
         /// <summary>
         /// FlowEmptyTemplateProperty.
         /// </summary>
-        public static readonly BindableProperty FlowEmptyTemplateProperty = BindableProperty.Create(nameof(FlowEmptyTemplate), typeof(DataTemplate), typeof(FlowListView), default(DataTemplate));
+        public static readonly BindableProperty FlowEmptyTemplateProperty = BindableProperty.Create(nameof(FlowEmptyTemplate), typeof(DataTemplate), typeof(MauiFlowListView), default(DataTemplate));
 
         /// <summary>
         /// Gets or sets FlowEmptyTemplate empty data template (ViewCell type).
@@ -517,7 +519,7 @@ namespace DLToolkit.Forms.Controls
         }
 
         /// <summary>
-        /// Forces FlowListView reload.
+        /// Forces MauiFlowListView reload.
         /// </summary>
         public void ForceReload(bool updateOnly = false)
         {
@@ -556,7 +558,7 @@ namespace DLToolkit.Forms.Controls
         internal void FlowPerformTap(object sender, object item)
         {
             FlowLastTappedItem = item;
-            FlowItemTapped?.Invoke(this, new ItemTappedEventArgs(sender, item));
+            FlowItemTapped?.Invoke(this, new ItemTappedEventArgs(sender, item, -1));
 
             var command = FlowItemTappedCommand;
             if (command != null && command.CanExecute(item))
@@ -613,7 +615,7 @@ namespace DLToolkit.Forms.Controls
             }
         }
 
-        private void FlowListViewPropertyChanging(object sender, Xamarin.Forms.PropertyChangingEventArgs e)
+        private void MauiFlowListViewPropertyChanging(object sender, Microsoft.Maui.Controls.PropertyChangingEventArgs e)
         {
             if (e.PropertyName == FlowItemsSourceProperty.PropertyName)
             {
@@ -635,7 +637,7 @@ namespace DLToolkit.Forms.Controls
             }
         }
 
-        private void FlowListViewPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void MauiFlowListViewPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == FlowItemsSourceProperty.PropertyName)
             {
@@ -670,12 +672,12 @@ namespace DLToolkit.Forms.Controls
             ForceReload(updateOnly: true);
         }
 
-        private void FlowListViewItemSelected(object sender, SelectedItemChangedEventArgs e)
+        private void MauiFlowListViewItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             SelectedItem = null;
         }
 
-        private void FlowListViewItemAppearing(object sender, ItemVisibilityEventArgs e)
+        private void MauiFlowListViewItemAppearing(object sender, ItemVisibilityEventArgs e)
         {
             if (IsRefreshing || FlowIsLoadingInfinite || ItemsSource == null || !ItemsSource.Cast<object>().Any())
                 return;
@@ -700,7 +702,7 @@ namespace DLToolkit.Forms.Controls
             {
                 foreach (var item in container)
                 {
-                    handler?.Invoke(this, new ItemVisibilityEventArgs(item));
+                    handler?.Invoke(this, new ItemVisibilityEventArgs(item, 0));
 
                     if (command != null && command.CanExecute(item))
                         command.Execute(item);
@@ -708,14 +710,14 @@ namespace DLToolkit.Forms.Controls
             }
             else
             {
-                handler?.Invoke(this, new ItemVisibilityEventArgs(e.Item));
+                handler?.Invoke(this, new ItemVisibilityEventArgs(e.Item, -1));
 
                 if (command != null && command.CanExecute(e.Item))
                     command.Execute(e.Item);
             }
         }
 
-        private void FlowListViewItemDisappearing(object sender, ItemVisibilityEventArgs e)
+        private void MauiFlowListViewItemDisappearing(object sender, ItemVisibilityEventArgs e)
         {
             if (e.Item is IEnumerable container)
             {
@@ -727,7 +729,7 @@ namespace DLToolkit.Forms.Controls
 
                 foreach (var item in container)
                 {
-                    handler?.Invoke(this, new ItemVisibilityEventArgs(item));
+                    handler?.Invoke(this, new ItemVisibilityEventArgs(item, -1));
 
                     if (command != null && command.CanExecute(item))
                         command.Execute(item);
@@ -808,9 +810,9 @@ namespace DLToolkit.Forms.Controls
 
         private void ReloadContainerList()
         {
-            ItemAppearing -= FlowListViewItemAppearing;
+            ItemAppearing -= MauiFlowListViewItemAppearing;
             ItemsSource = GetContainerList();
-            ItemAppearing += FlowListViewItemAppearing;
+            ItemAppearing += MauiFlowListViewItemAppearing;
         }
 
         private void UpdateGroupedContainerList()
@@ -946,7 +948,7 @@ namespace DLToolkit.Forms.Controls
 
         private void ReloadGroupedContainerList()
         {
-            ItemAppearing -= FlowListViewItemAppearing;
+            ItemAppearing -= MauiFlowListViewItemAppearing;
             var ctrList = GetGroupedContainerList();
 
             try
@@ -960,7 +962,7 @@ namespace DLToolkit.Forms.Controls
                 //TODO HACK some strange Xamarin.Forms exceptionw when using grouping + fast scroll shortname list  !?
             }
 
-            ItemAppearing += FlowListViewItemAppearing;
+            ItemAppearing += MauiFlowListViewItemAppearing;
         }
 
         /// <summary>

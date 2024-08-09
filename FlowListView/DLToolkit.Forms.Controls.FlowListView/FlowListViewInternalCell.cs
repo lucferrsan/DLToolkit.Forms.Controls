@@ -1,9 +1,12 @@
 ﻿using System;
-using Xamarin.Forms;
 using System.Collections.Generic;
 using System.Collections;
 using System.Threading.Tasks;
 using System.Collections.Specialized;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui;
+using Microsoft.Maui.Layouts;
+using Microsoft.Maui.Graphics;
 
 namespace DLToolkit.Forms.Controls
 {
@@ -13,7 +16,7 @@ namespace DLToolkit.Forms.Controls
     [Helpers.FlowListView.Preserve(AllMembers = true)]
     public class FlowListViewInternalCell : ViewCell
     {
-        readonly WeakReference<FlowListView> _flowListViewRef;
+        readonly WeakReference<MauiFlowListView> _flowListViewRef;
         readonly AbsoluteLayout _rootLayout;
         readonly Grid _rootLayoutAuto;
         readonly bool _useGridAsMainRoot;
@@ -26,10 +29,10 @@ namespace DLToolkit.Forms.Controls
         /// Initializes a new instance of the <see cref="DLToolkit.Forms.Controls.FlowListViewInternalCell"/> class.
         /// </summary>
         /// <param name="flowListViewRef">Flow list view reference.</param>
-        public FlowListViewInternalCell(WeakReference<FlowListView> flowListViewRef)
+        public FlowListViewInternalCell(WeakReference<MauiFlowListView> flowListViewRef)
         {
             _flowListViewRef = flowListViewRef;
-            flowListViewRef.TryGetTarget(out FlowListView flowListView);
+            flowListViewRef.TryGetTarget(out MauiFlowListView flowListView);
             _useGridAsMainRoot = !flowListView.FlowUseAbsoluteLayoutInternally;
 
             if (!_useGridAsMainRoot)
@@ -67,7 +70,7 @@ namespace DLToolkit.Forms.Controls
 
             if (_flowColumnTemplate is FlowTemplateSelector flowTemplateSelector)
             {
-                _flowListViewRef.TryGetTarget(out FlowListView flowListView);
+                _flowListViewRef.TryGetTarget(out MauiFlowListView flowListView);
 
                 for (int i = 0; i < container.Count; i++)
                 {
@@ -80,7 +83,7 @@ namespace DLToolkit.Forms.Controls
 
             if (_flowColumnTemplate is DataTemplateSelector templateSelector)
             {
-                _flowListViewRef.TryGetTarget(out FlowListView flowListView);
+                _flowListViewRef.TryGetTarget(out MauiFlowListView flowListView);
 
                 for (int i = 0; i < container.Count; i++)
                 {
@@ -136,7 +139,7 @@ namespace DLToolkit.Forms.Controls
         void AddViewToLayoutAutoHeightDisabled(View view, int containerCount, int colNumber)
         {
             double desiredColumnWidth = 1d / _desiredColumnCount;
-            Rectangle bounds = Rectangle.Zero;
+            Rect bounds = Rect.Zero;
 
             if (_flowColumnExpand != FlowColumnExpand.None && _desiredColumnCount > containerCount)
             {
@@ -149,15 +152,15 @@ namespace DLToolkit.Forms.Controls
 
                         if (colNumber == 0)
                         {
-                            bounds = new Rectangle(0d, 0d, desiredColumnWidth + (desiredColumnWidth * diff), 1d);
+                            bounds = new Rect(0d, 0d, desiredColumnWidth + (desiredColumnWidth * diff), 1d);
                         }
                         else if (isLastColumn)
                         {
-                            bounds = new Rectangle(1d, 0d, desiredColumnWidth, 1d);
+                            bounds = new Rect(1d, 0d, desiredColumnWidth, 1d);
                         }
                         else
                         {
-                            bounds = new Rectangle(desiredColumnWidth * (colNumber + diff) / (1d - desiredColumnWidth), 0d, desiredColumnWidth, 1d);
+                            bounds = new Rect(desiredColumnWidth * (colNumber + diff) / (1d - desiredColumnWidth), 0d, desiredColumnWidth, 1d);
                         }
 
                         break;
@@ -166,15 +169,15 @@ namespace DLToolkit.Forms.Controls
 
                         if (colNumber == 0)
                         {
-                            bounds = new Rectangle(0d, 0d, desiredColumnWidth + (desiredColumnWidth * diff), 1d);
+                            bounds = new Rect(0d, 0d, desiredColumnWidth + (desiredColumnWidth * diff), 1d);
                         }
                         else if (isLastColumn)
                         {
-                            bounds = new Rectangle(1d, 0d, desiredColumnWidth + (desiredColumnWidth * diff), 1d);
+                            bounds = new Rect(1d, 0d, desiredColumnWidth + (desiredColumnWidth * diff), 1d);
                         }
                         else
                         {
-                            bounds = new Rectangle(desiredColumnWidth * colNumber / (1d - desiredColumnWidth), 0d, desiredColumnWidth, 1d);
+                            bounds = new Rect(desiredColumnWidth * colNumber / (1d - desiredColumnWidth), 0d, desiredColumnWidth, 1d);
                         }
 
                         break;
@@ -184,15 +187,15 @@ namespace DLToolkit.Forms.Controls
                         double propColumnsWidth = 1d / containerCount;
                         if (colNumber == 0)
                         {
-                            bounds = new Rectangle(0d, 0d, propColumnsWidth, 1d);
+                            bounds = new Rect(0d, 0d, propColumnsWidth, 1d);
                         }
                         else if (isLastColumn)
                         {
-                            bounds = new Rectangle(1d, 0d, propColumnsWidth, 1d);
+                            bounds = new Rect(1d, 0d, propColumnsWidth, 1d);
                         }
                         else
                         {
-                            bounds = new Rectangle(propColumnsWidth * colNumber / (1d - propColumnsWidth), 0d, propColumnsWidth, 1d);
+                            bounds = new Rect(propColumnsWidth * colNumber / (1d - propColumnsWidth), 0d, propColumnsWidth, 1d);
                         }
 
                         break;
@@ -205,15 +208,15 @@ namespace DLToolkit.Forms.Controls
 
                         if (colNumber == 0)
                         {
-                            bounds = new Rectangle(0d, 0d, propFSizeFirst, 1d);
+                            bounds = new Rect(0d, 0d, propFSizeFirst, 1d);
                         }
                         else if (isLastColumn)
                         {
-                            bounds = new Rectangle(1d, 0d, propFSize, 1d);
+                            bounds = new Rect(1d, 0d, propFSize, 1d);
                         }
                         else
                         {
-                            bounds = new Rectangle(((propFSize * colNumber) + (propFSizeFirst - propFSize)) / (1d - propFSize), 0d, propFSize, 1d);
+                            bounds = new Rect(((propFSize * colNumber) + (propFSizeFirst - propFSize)) / (1d - propFSize), 0d, propFSize, 1d);
                         }
 
                         break;
@@ -226,15 +229,15 @@ namespace DLToolkit.Forms.Controls
 
                         if (colNumber == 0)
                         {
-                            bounds = new Rectangle(0d, 0d, propLSize, 1d);
+                            bounds = new Rect(0d, 0d, propLSize, 1d);
                         }
                         else if (isLastColumn)
                         {
-                            bounds = new Rectangle(1d, 0d, propLSizeLast, 1d);
+                            bounds = new Rect(1d, 0d, propLSizeLast, 1d);
                         }
                         else
                         {
-                            bounds = new Rectangle((propLSize * colNumber) / (1d - propLSize), 0d, propLSize, 1d);
+                            bounds = new Rect((propLSize * colNumber) / (1d - propLSize), 0d, propLSize, 1d);
                         }
 
                         break;
@@ -244,15 +247,19 @@ namespace DLToolkit.Forms.Controls
             {
                 if (Math.Abs(1d - desiredColumnWidth) < Epsilon.DoubleValue)
                 {
-                    bounds = new Rectangle(1d, 0d, desiredColumnWidth, 1d);
+                    bounds = new Rect(1d, 0d, desiredColumnWidth, 1d);
                 }
                 else
                 {
-                    bounds = new Rectangle(desiredColumnWidth * colNumber / (1d - desiredColumnWidth), 0d, desiredColumnWidth, 1d);
+                    bounds = new Rect(desiredColumnWidth * colNumber / (1d - desiredColumnWidth), 0d, desiredColumnWidth, 1d);
                 }
             }
 
-            _rootLayout.Children.Add(view, bounds, AbsoluteLayoutFlags.All);
+            AbsoluteLayout.SetLayoutBounds(view, bounds);
+            AbsoluteLayout.SetLayoutFlags(view, AbsoluteLayoutFlags.All);
+            _rootLayout.Children.Add(view);
+
+            _rootLayout.Children.Add(view);
         }
 
         void AddViewToLayoutAutoHeightEnabled(View view, int containerCount, int colNumber)
@@ -266,7 +273,7 @@ namespace DLToolkit.Forms.Controls
                 {
                     case FlowColumnExpand.None:
 
-                        _rootLayoutAuto.Children.Add(view, colNumber, 0);
+                        _rootLayoutAuto.Children.Add(view);
 
                         break;
 
@@ -274,11 +281,11 @@ namespace DLToolkit.Forms.Controls
 
                         if (colNumber == 0)
                         {
-                            _rootLayoutAuto.Children.Add(view, colNumber, colNumber + diff + 1, 0, 1);
+                            _rootLayoutAuto.Children.Add(view);
                         }
                         else
                         {
-                            _rootLayoutAuto.Children.Add(view, colNumber + diff, colNumber + diff + 1, 0, 1);
+                            _rootLayoutAuto.Children.Add(view);
                         }
 
                         break;
@@ -287,11 +294,11 @@ namespace DLToolkit.Forms.Controls
 
                         if (isLastColumn)
                         {
-                            _rootLayoutAuto.Children.Add(view, colNumber, colNumber + diff + 1, 0, 1);
+                            _rootLayoutAuto.Children.Add(view);
                         }
                         else
                         {
-                            _rootLayoutAuto.Children.Add(view, colNumber, 0);
+                            _rootLayoutAuto.Children.Add(view);
                         }
 
                         break;
@@ -299,7 +306,7 @@ namespace DLToolkit.Forms.Controls
                     case FlowColumnExpand.Proportional:
 
                         int howManyP = _desiredColumnCount / containerCount - 1;
-                        _rootLayoutAuto.Children.Add(view, colNumber + colNumber * howManyP, colNumber + colNumber * howManyP + howManyP + 1, 0, 1);
+                        _rootLayoutAuto.Children.Add(view);
 
                         break;
 
@@ -309,9 +316,9 @@ namespace DLToolkit.Forms.Controls
                         int otherSize = (int)Math.Floor((double)_desiredColumnCount / containerCount); //2
 
                         if (colNumber == 0)
-                            _rootLayoutAuto.Children.Add(view, 0, otherSize + firstSizeAdd, 0, 1);
+                            _rootLayoutAuto.Children.Add(view);
                         else
-                            _rootLayoutAuto.Children.Add(view, (colNumber * otherSize) + firstSizeAdd, ((colNumber + 1) * otherSize) + firstSizeAdd, 0, 1);
+                            _rootLayoutAuto.Children.Add(view);
 
                         break;
 
@@ -322,11 +329,11 @@ namespace DLToolkit.Forms.Controls
 
                         if (isLastColumn)
                         {
-                            _rootLayoutAuto.Children.Add(view, (colNumber * otherSize1), ((colNumber + 1) * otherSize1) + lastSizeAdd, 0, 1);
+                            _rootLayoutAuto.Children.Add(view);
                         }
                         else
                         {
-                            _rootLayoutAuto.Children.Add(view, (colNumber * otherSize1), ((colNumber + 1) * otherSize1), 0, 1);
+                            _rootLayoutAuto.Children.Add(view);
                         }
 
                         break;
@@ -334,7 +341,7 @@ namespace DLToolkit.Forms.Controls
             }
             else
             {
-                _rootLayoutAuto.Children.Add(view, colNumber, 0);
+                _rootLayoutAuto.Children.Add(view);
             }
         }
 
@@ -367,7 +374,7 @@ namespace DLToolkit.Forms.Controls
 
             var newDesiredColumnCount = 0;
 
-            if (_flowListViewRef.TryGetTarget(out FlowListView flowListView) && flowListView != null)
+            if (_flowListViewRef.TryGetTarget(out MauiFlowListView flowListView) && flowListView != null)
             {
                 _flowColumnTemplate = flowListView.FlowColumnTemplate;
                 newDesiredColumnCount = flowListView.FlowDesiredColumnCount;
@@ -403,14 +410,26 @@ namespace DLToolkit.Forms.Controls
                 {
                     for (int i = 0; i < containerCount; i++)
                     {
-                        SetBindingContextForView(_rootLayoutAuto.Children[i], container[i]);
+                        var view = _rootLayoutAuto.Children
+                            .FirstOrDefault(v => _rootLayoutAuto.GetRow(v) == 0 && _rootLayoutAuto.GetColumn(v) == i) as View;
+
+                        if (view != null)
+                        {
+                            SetBindingContextForView(view, container[i]);
+                        }
                     }
                 }
                 else
                 {
                     for (int i = 0; i < containerCount; i++)
                     {
-                        SetBindingContextForView(_rootLayout.Children[i], container[i]);
+                        var view = _rootLayoutAuto.Children
+                            .FirstOrDefault(v => _rootLayoutAuto.GetRow(v) == 0 && _rootLayoutAuto.GetColumn(v) == i) as View;
+
+                        if (view != null)
+                        {
+                            SetBindingContextForView(view, container[i]);
+                        }
                     }
                 }
             }
@@ -484,7 +503,7 @@ namespace DLToolkit.Forms.Controls
                 flowCell.OnTapped();
             }
 
-            _flowListViewRef.TryGetTarget(out FlowListView flowListView);
+            _flowListViewRef.TryGetTarget(out MauiFlowListView flowListView);
 
             if (flowListView != null)
             {
